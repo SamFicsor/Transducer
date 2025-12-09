@@ -21,12 +21,16 @@ class transducer:
             "checkCT ","errorCT ", "moveC ", "selectV ", "moveV ", "resetV "]
 
         self.D = {
-            (0, 'documentReady'):(1, 'noop'), (1, 'mouseMove'):(1, 'noop'),
+            (0, 'documentReady'):(1, 'noop'), (1, 'mouseUpCanvas'):(1, 'moveV'),
             (1, 'clickOnCanvas'):(1, 'selectV'), (1, 'mouseLeaveCanvas'):(1, 'resetV'),
             (1, 'mouseDownVertex'):(1, 'moveV'), (1, 'clickRecenterButton'):(3, 'showCP'),
-            (1, 'clickTriChooseButton'):(2, 'showTP'), (2, 'clickOnCanvas'):(1, 'hideTP'),
+            (1, 'clickTriChooseButton'):(2, 'showTP'), (2, 'clickOnCanvas'):(1, 'hideTP'), (1, 'clickRecenterButton'):(3, 'showCP'),
             (2, 'click'):(1, 'hideTP'), (2, 'clickTriChooseButton'):(1, 'hideTP'),
-            (2, 'clickTriChooseButton'):(1, 'reset'), (2, 'clickRecenterButton'):(3, 'hideTP', 'showCP')
+            (2, 'clickTriChooseButton'):(1, 'resetT'), (2, 'clickRecenterButton'):(3, 'hideTP', 'showCP'),
+            (3, 'recenterTextChange'):(1, 'moveCT'), (3, 'click'):(1, 'hideCP'), (3, 'clickRecenterPlane'):(1, 'hideCP'),
+            (3, 'recenterTextChange'):(5, 'checkCT'), (5, 'recenterTextSucc'):(1, 'moveC'), (5, 'click'):(1, 'hideCP'),
+            (5, 'recenterTextFail'):(6, 'errorCT'), (6, 'recenterTextChange'):(5, 'checkCT'), (3, 'clickTriChooseButton'):(2, 'hideCP', 'showTP'),
+            (5, 'clickTriChooseButton'):(2, 'hideCP', 'showTP'), (6, 'clickTriChooseButton'):(2, 'hideCP', 'showTP')
         }
         
         self.S = 0 #start state
@@ -52,12 +56,15 @@ if __name__ == "__main__":
         print(f'Read({count}): {msg} {data}',file=sys.stderr) #4DEBUG!
         
         response = ''
+        
+        try:
         # make an output for every output character
         # range from 1 because not including the state we're going to
-        for i in range(1, len(M.D[(currstate, msg)])): 
-            response = response + M.D[(currstate, msg)][i] + data
-
-        currstate = M.D[(currstate, msg)][0]
+            for i in range(1, len(M.D[(currstate, msg)])): 
+                    response = response + M.D[(currstate, msg)][i] + ' ' + data
+            currstate = M.D[(currstate, msg)][0] #move to next state
+        except KeyError: # for missing transitions, just do a noop
+            response = 'noop 0'
         # Choose action message to respond with
         # response = "noop 0"
         # match msg:
