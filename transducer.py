@@ -26,11 +26,12 @@ class transducer:
             (1, 'mouseDownVertex'):(1, 'moveV'), (1, 'clickRecenterButton'):(3, 'showCP'),
             (1, 'clickTriChooseButton'):(2, 'showTP'), (2, 'clickOnCanvas'):(1, 'hideTP'), (1, 'clickRecenterButton'):(3, 'showCP'),
             (2, 'click'):(1, 'hideTP'), (2, 'clickTriChooseButton'):(1, 'hideTP'),
-            (2, 'clickTriChooseButton'):(1, 'resetT'), (2, 'clickRecenterButton'):(3, 'hideTP', 'showCP'),
+            (2, 'clickTriTypeChoice'):(1, 'resetT', 'hideTP'), (2, 'clickRecenterButton'):(3, 'hideTP', 'showCP'),
             (3, 'recenterTextChange'):(1, 'moveCT'), (3, 'click'):(1, 'hideCP'), (3, 'clickRecenterPlane'):(1, 'hideCP'),
-            (3, 'recenterTextChange'):(5, 'checkCT'), (5, 'recenterTextSucc'):(1, 'moveC'), (5, 'click'):(1, 'hideCP'),
+            (3, 'recenterTextChange'):(5, 'checkCT'), (5, 'recenterTextSucc'):(1, 'moveC', 'hideCP'), (5, 'click'):(1, 'hideCP'),
             (5, 'recenterTextFail'):(6, 'errorCT'), (6, 'recenterTextChange'):(5, 'checkCT'), (3, 'clickTriChooseButton'):(2, 'hideCP', 'showTP'),
-            (5, 'clickTriChooseButton'):(2, 'hideCP', 'showTP'), (6, 'clickTriChooseButton'):(2, 'hideCP', 'showTP')
+            (5, 'clickTriChooseButton'):(2, 'hideCP', 'showTP'), (6, 'clickTriChooseButton'):(2, 'hideCP', 'showTP'), 
+            (5, 'clickOnCanvas'):(1,'moveC', 'hideCP'), (6, 'clickOnCanvas'):(1,'moveC', 'hideCP'), (3, 'clickOnCanvas'):(1,'moveC', 'hideCP')
         }
         
         self.S = 0 #start state
@@ -65,24 +66,8 @@ if __name__ == "__main__":
             currstate = M.D[(currstate, msg)][0] #move to next state
         except KeyError: # for missing transitions, just do a noop
             response = 'noop 0'
-        # Choose action message to respond with
-        # response = "noop 0"
-        # match msg:
-        #     case 'mouseDownVertex':
-        #         response = "showCP " + data
-        #     case 'mouseLeaveCanvas':
-        #         response = "hideCP " + data
-        #     case _:
-        #         print(f'No handler for: {msg}',file=sys.stderr)
         
         # Respond to GUI - flush to send line immediately!
         print(response + "\n",file=togui,flush=True)
         print(f'Sent({count}): {response}',file=sys.stderr) #4DEBUG!
-        
-        
-        #     #input on this axis
-        # self.D = {(0, None):(1,'documentReady 0'), #for multiple symbol output, make a longer tuple and test for length of tuple when printing
-        #     (1, 'selectV '):(1, 'clickOnCanvas '), (1, 'moveV '):(1, 'mouseMove ', 'mouseDownVertex '), (1, 'resetV '):(1, 'leaveCanvas 0'),
-        #     (1, 'showTP '):(2, 'clickTriChooseButton 0'), (1, 'showCP '):(3, 'clickRecenterButton 0'),
-        #     (2, 'hideTP '):(1, 'clickOnCanvas '), (2, 'hideTP '):(1, 'click 0'), (2, 'hideTP '):(1, 'clickTriChooseButton 0'), (2, 'reset '):(1, 'clickTriChoiceType ')
-        #     }
+        print(f'currstate: {currstate}')
