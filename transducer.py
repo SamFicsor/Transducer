@@ -26,7 +26,7 @@ class transducer:
             (1, 'mouseDownVertex'):(1, 'moveV'), (1, 'clickRecenterButton'):(3, 'showCP'),
             (1, 'clickTriChooseButton'):(2, 'showTP'), (2, 'clickOnCanvas'):(1, 'hideTP'),
             (2, 'click'):(1, 'hideTP'), (2, 'clickTriChooseButton'):(1, 'hideTP'),
-            (2, 'clickTriChooseButton'):(1, 'reset')
+            (2, 'clickTriChooseButton'):(1, 'reset'), (2, 'clickRecenterButton'):(3, 'hideTP', 'showCP')
         }
         
         self.S = 0 #start state
@@ -50,10 +50,14 @@ if __name__ == "__main__":
             break
         count += 1
         print(f'Read({count}): {msg} {data}',file=sys.stderr) #4DEBUG!
+        
+        response = ''
+        # make an output for every output character
+        # range from 1 because not including the state we're going to
+        for i in range(1, len(M.D[(currstate, msg)])): 
+            response = response + M.D[(currstate, msg)][i] + data
 
-        response = M.D[(currstate, msg)][1] + data
         currstate = M.D[(currstate, msg)][0]
-
         # Choose action message to respond with
         # response = "noop 0"
         # match msg:
@@ -67,7 +71,6 @@ if __name__ == "__main__":
         # Respond to GUI - flush to send line immediately!
         print(response + "\n",file=togui,flush=True)
         print(f'Sent({count}): {response}',file=sys.stderr) #4DEBUG!
-        
         
         
         #     #input on this axis
