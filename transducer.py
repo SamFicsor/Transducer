@@ -7,41 +7,37 @@ import sys
 
 class transducer:
     
-    def __init__(self):
-        #make the components of a transducer
-        self.Q = {0, 1, 2, 3, 4 ,5, 6, 7} # represents states q0 - q5
-
-        #input alphabet
-        self.E = ["click", "clickOnCanvas ", "clickRecenterButton", "clickRecenterPane", "clickRecenterTextBox",
-            "clickTriChooseButton", "clickTriTypeChoice", "documentReady", "mouseDownVertex", "mouseLeaveCanvas",
-            "mouseMove ", "mouseUpCanvas ", "recenterTextChange ", "recenterTextFail", "recenterTextSucc"]
-
-        #output alphabet
-        self.G = ["noop", "showTP ", "hideTP ", "resetT ", "showCP ", "hideCP ",
-            "checkCT ","errorCT ", "moveC ", "selectV ", "moveV ", "resetV "]
-
-        self.D = {
-            (0, 'documentReady'):(1, 'noop'), (1, 'mouseUpCanvas'):(1, 'moveV'), (1, 'mouseDownVertex'):(1, 'moveV'), (1, 'clickRecenterButton'):(3, 'showCP'),
-            (1, 'clickTriChooseButton'):(2, 'showTP'), (2, 'clickOnCanvas'):(1, 'hideTP'), (1, 'clickRecenterButton'):(3, 'showCP'),(2, 'click'):(1, 'hideTP'), 
-            (2, 'clickTriChooseButton'):(1, 'hideTP'), (2, 'clickTriTypeChoice'):(1, 'resetT', 'hideTP'), (2, 'clickRecenterButton'):(3, 'hideTP', 'showCP'), 
-            (3, 'recenterTextChange'):(1, 'moveCT'), (3, 'click'):(1, 'hideCP'), (3, 'clickRecenterPlane'):(1, 'hideCP'), (3, 'recenterTextChange'):(5, 'checkCT'),
-            (5, 'recenterTextSucc'):(1, 'moveC', 'hideCP'), (5, 'click'):(1, 'hideCP'), (5, 'recenterTextFail'):(6, 'errorCT'), 
-            (6, 'recenterTextChange'):(5, 'checkCT'), (3, 'clickTriChooseButton'):(2, 'hideCP', 'showTP'), (5, 'clickTriChooseButton'):(2, 'hideCP', 'showTP'), 
-            (6, 'clickTriChooseButton'):(2, 'hideCP', 'showTP'), (5, 'clickOnCanvas'):(1,'moveC', 'hideCP'), (6, 'clickOnCanvas'):(1,'moveC', 'hideCP'),
-            (3, 'clickOnCanvas'):(1,'moveC', 'hideCP'), (1, 'mouseDownVertex'):(7, 'selectV'), (7, 'mouseMove'):(7, 'moveV'), (7, 'mouseLeaveCanvas'):(1, 'resetV'), 
-            (7, 'clickOnCanvas'):(1, 'noop')
-        }
-        
-        self.S = 0 #start state
-        #M = (Q, E, G, D, S)
-        self.M = (self.Q, self.E, self.G, self.D, self.S)
+    def __init__(self, M):
+        # #M = (Q, E, G, D, S)
+        self.Q,self.E,self.G,self.D,self.S = M
     
         
 
 if __name__ == "__main__":
     frgui = open("fromGUI","r")
     togui = open("toGUI","w")
-    M = transducer()
+    
+    # Mtuple = (Q, E, G, D, S)
+    Mtuple = (
+        {0, 1, 2, 3, 4 ,5, 6, 7},
+        ["click", "clickOnCanvas ", "clickRecenterButton", "clickRecenterPane", "clickRecenterTextBox",
+        "clickTriChooseButton", "clickTriTypeChoice", "documentReady", "mouseDownVertex", "mouseLeaveCanvas",
+        "mouseMove ", "mouseUpCanvas ", "recenterTextChange ", "recenterTextFail", "recenterTextSucc"],
+        ["noop", "showTP ", "hideTP ", "resetT ", "showCP ", "hideCP ",
+            "checkCT ","errorCT ", "moveC ", "selectV ", "moveV ", "resetV "],
+        {(0, 'documentReady'):(1, 'noop'), (1, 'mouseUpCanvas'):(1, 'moveV'), (1, 'mouseDownVertex'):(1, 'moveV'), (1, 'clickRecenterButton'):(3, 'showCP'),
+        (1, 'clickTriChooseButton'):(2, 'showTP'), (2, 'clickOnCanvas'):(1, 'hideTP'), (1, 'clickRecenterButton'):(3, 'showCP'),(2, 'click'):(1, 'hideTP'), 
+        (2, 'clickTriChooseButton'):(1, 'hideTP'), (2, 'clickTriTypeChoice'):(1, 'resetT', 'hideTP'), (2, 'clickRecenterButton'):(3, 'hideTP', 'showCP'), 
+        (3, 'recenterTextChange'):(1, 'moveCT'), (3, 'click'):(1, 'hideCP'), (3, 'clickRecenterPlane'):(1, 'hideCP'), (3, 'recenterTextChange'):(5, 'checkCT'),
+        (5, 'recenterTextSucc'):(1, 'moveC', 'hideCP'), (5, 'click'):(1, 'hideCP'), (5, 'recenterTextFail'):(6, 'errorCT'), 
+        (6, 'recenterTextChange'):(5, 'checkCT'), (3, 'clickTriChooseButton'):(2, 'hideCP', 'showTP'), (5, 'clickTriChooseButton'):(2, 'hideCP', 'showTP'), 
+        (6, 'clickTriChooseButton'):(2, 'hideCP', 'showTP'), (5, 'clickOnCanvas'):(1,'moveC', 'hideCP'), (6, 'clickOnCanvas'):(1,'moveC', 'hideCP'),
+        (3, 'clickOnCanvas'):(1,'moveC', 'hideCP'), (1, 'mouseDownVertex'):(7, 'selectV'), (7, 'mouseMove'):(7, 'moveV'), (7, 'mouseLeaveCanvas'):(1, 'resetV'), 
+        (7, 'clickOnCanvas'):(1, 'noop')},
+        0
+    )
+    
+    M = transducer(Mtuple)
     
     currstate = M.S
     count = 0
